@@ -563,7 +563,8 @@ impl TransferOss2Oss {
                     source_key.push_str(target_key);
                 };
 
-                if !source_client
+                if !source_key.is_empty() &&
+                    !source_client
                     .object_exists(&self.source.bucket, &source_key)
                     .await?
                 {
@@ -817,12 +818,15 @@ impl TransferOss2OssRecordsExecutor {
 
         let expr = match s_obj_output.expires_string {
             Some(str) => {
-                let date = DateTime::from_str(&str, Format::DateTime).context(format!(
-                    "{}:{}",
-                    file!(),
-                    line!()
-                ))?;
-                Some(date)
+                let formats = [
+                    Format::DateTime,
+                    Format::DateTimeWithOffset,
+                    Format::HttpDate,
+                    Format::EpochSeconds,
+                ];
+                formats.iter().find_map(|&format| 
+                    DateTime::from_str(&str, format).ok()
+                )
             }
             None => None,
         };
