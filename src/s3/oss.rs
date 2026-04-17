@@ -1,6 +1,6 @@
 use crate::models::model_s3::{OSSDescription, OssProvider, S3RequestStyle};
 
-use super::{jd_s3::OssJdClient, oss_client::OssClient};
+use super::{jd_s3::OssJdClient, ali_s3::OssAliClient, oss_client::OssClient};
 use anyhow::Result;
 use async_trait::async_trait;
 use aws_config::{
@@ -137,7 +137,30 @@ impl OSSDescription {
                 let aws_client = OssJdClient { client };
                 Ok(Box::new(aws_client))
             }
-            OssProvider::ALI => todo!(),
+            OssProvider::ALI => {
+                let shared_config = SdkConfig::builder()
+                    .credentials_provider(SharedCredentialsProvider::new(Credentials::new(
+                        self.access_key_id.clone(),
+                        self.secret_access_key.clone(),
+                        self.session_token.clone(),
+                        None,
+                        "Static",
+                    )))
+                    .endpoint_url(self.endpoint.clone())
+                    .region(Region::new(self.region.clone()))
+                    .build();
+
+                let mut s3_config_builder = aws_sdk_s3::config::Builder::from(&shared_config);
+                if let S3RequestStyle::PathStyle = self.request_style {
+                    s3_config_builder = s3_config_builder.force_path_style(true);
+                }
+                let client = aws_sdk_s3::Client::from_conf(s3_config_builder.build());
+                let ali_client = OssAliClient {
+                    client,
+                    sts_token: self.session_token.clone(),
+                };
+                Ok(Box::new(ali_client))
+            },
             OssProvider::JRSS => todo!(),
             OssProvider::HUAWEI => todo!(),
             OssProvider::COS => todo!(),
@@ -154,7 +177,7 @@ impl OSSDescription {
             .credentials_provider(SharedCredentialsProvider::new(Credentials::new(
                 self.access_key_id.clone(),
                 self.secret_access_key.clone(),
-                None,
+                self.session_token.clone(),
                 None,
                 "Static",
             )))

@@ -29,6 +29,7 @@ source:
   provider: ALI
   access_key_id: access_key_id
   secret_access_key: secret_access_key
+  session_token: session_token
   endpoint: http://oss-cn-beijing.aliyuncs.com
   region: cn-north-1
   bucket: bucket_name
@@ -38,6 +39,7 @@ target:
   provider: JD
   access_key_id: access_key_id
   secret_access_key: secret_access_key
+  session_token: session_token
   endpoint: http://s3.cn-north-1.jdcloud-oss.com
   region: cn-north-1
   bucket: bucket_name
@@ -130,6 +132,14 @@ attributes:
        <td>source:<br>
         &nbsp;&nbsp;&nbsp;&nbsp; secret_access_key: xxxx</td>
 	</tr>
+      <tr>
+	   <td>source.session_token</td>
+	   <td>String</td>
+       <td>否</td>
+       <td>（当前只适用于阿里云）如果 OSS 提供了 Session Token 或者 STS Token 等字段，请填入本字段</td>
+       <td>source:<br>
+            session_token: xxxx</td>
+	</tr>
     <tr>
 	   <td>source.endpoint</td>
 	   <td>String</td>
@@ -200,6 +210,14 @@ attributes:
        <td>当源为对象存储时，指定对象存储的 secret key</td>
        <td>target:<br>
         &nbsp;&nbsp;&nbsp;&nbsp; secret_access_key: xxxx</td>
+	</tr>
+      <tr>
+	   <td>target.session_token</td>
+	   <td>String</td>
+       <td>否</td>
+       <td>（当前只适用于阿里云）如果 OSS 提供了 Session Token 或者 STS Token 等字段，请填入本字段</td>
+       <td>target:<br>
+            session_token: xxxx</td>
 	</tr>
     <tr>
 	   <td>target.endpoint</td>
@@ -412,6 +430,7 @@ source:
   provider: JD
   access_key_id: access_key_id
   secret_access_key: secret_access_key
+  session_token: session_token
   endpoint: http://s3.cn-north-1.jdcloud-oss.com
   region: cn-north-1
   bucket: bucket_name
@@ -421,6 +440,7 @@ target:
   provider: JD
   access_key_id: access_key_id
   secret_access_key: secret_access_key
+  session_token: session_token
   endpoint: http://s3.cn-north-1.jdcloud-oss.com
   region: cn-north-1
   bucket: bucket_name
@@ -509,6 +529,14 @@ attributes:
        <td>source:<br>
         &nbsp;&nbsp;&nbsp;&nbsp; secret_access_key: xxxx</td>
 	</tr>
+      <tr>
+	   <td>source.session_token</td>
+	   <td>String</td>
+       <td>否</td>
+       <td>（当前只适用于阿里云）如果 OSS 提供了 Session Token 或者 STS Token 等字段，请填入本字段</td>
+       <td>source:<br>
+            session_token: xxxx</td>
+	</tr>
     <tr>
 	   <td>source.endpoint</td>
 	   <td>String</td>
@@ -579,6 +607,14 @@ attributes:
        <td>当源为对象存储时，指定对象存储的 secret key</td>
        <td>target:<br>
         &nbsp;&nbsp;&nbsp;&nbsp; secret_access_key: xxxx</td>
+	</tr>
+      <tr>
+	   <td>target.session_token</td>
+	   <td>String</td>
+       <td>否</td>
+       <td>（当前只适用于阿里云）如果 OSS 提供了 Session Token 或者 STS Token 等字段，请填入本字段</td>
+       <td>target:<br>
+            session_token: xxxx</td>
 	</tr>
     <tr>
 	   <td>target.endpoint</td>
