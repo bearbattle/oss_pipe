@@ -91,4 +91,8 @@ impl TaskDefaultParameters {
     pub fn increment_mode_default() -> IncrementMode {
         IncrementMode::default()
     }
+
+    pub fn preserve_prefix_default() -> bool {
+        true
+    }
 }

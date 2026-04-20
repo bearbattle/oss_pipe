@@ -60,6 +60,8 @@ task_desc:
     # 存量模式完成后进入增量模式
     continuous: false
     transfer_type: Stock
+    # 是否保留源 Bucket 的 prefix，默认值为 true
+    preserve_prefix: true
     # 通过最后跟新时间过滤文件
     last_modify_filter:
       # 过滤方式，指定大于或小于指定时间戳，Greater、Less

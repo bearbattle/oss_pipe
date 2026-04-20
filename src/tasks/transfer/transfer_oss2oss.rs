@@ -427,11 +427,37 @@ impl TransferOss2Oss {
                     };
                     if let Some(d) = obj.last_modified() {
                         if last_modify_filter.passed(usize::try_from(d.secs())?) {
-                            let mut target_key = "".to_string();
-                            if let Some(p) = &self.target.prefix {
-                                target_key.push_str(p);
-                            }
-                            target_key.push_str(source_key);
+                            // 根据preserve_prefix选项决定是否保留源端prefix
+                            let target_key = if self.attributes.preserve_prefix {
+                                // 保留源端prefix，目标key = 目标prefix + 完整源key
+                                let mut key = "".to_string();
+                                if let Some(p) = &self.target.prefix {
+                                    key.push_str(p);
+                                }
+                                key.push_str(source_key);
+                                key
+                            } else {
+                                // 不保留源端prefix，目标key = 目标prefix + (源key - 源prefix)
+                                let mut key = "".to_string();
+                                if let Some(p) = &self.target.prefix {
+                                    key.push_str(p);
+                                }
+                                
+                                // 去掉源端prefix部分
+                                let source_key_without_prefix = match &self.source.prefix {
+                                    Some(source_prefix) => {
+                                        if source_key.starts_with(source_prefix) {
+                                            &source_key[source_prefix.len()..]
+                                        } else {
+                                            source_key
+                                        }
+                                    }
+                                    None => source_key,
+                                };
+                                
+                                key.push_str(source_key_without_prefix);
+                                key
+                            };
 
                             let record = RecordOption {
                                 source_key: source_key.to_string(),
@@ -552,15 +578,41 @@ impl TransferOss2Oss {
     ) -> Result<()> {
         for obj in objects {
             if let Some(target_key) = obj.key() {
-                let mut source_key = "".to_string();
-                if let Some(p) = &self.target.prefix {
-                    let key = match p.ends_with("/") {
-                        true => &target_key[p.len()..],
-                        false => &target_key[p.len() + 1..],
-                    };
-                    source_key.push_str(key);
+                // 根据preserve_prefix选项决定如何从目标key推导源key
+                let source_key = if self.attributes.preserve_prefix {
+                    // 保留源端prefix时，目标key = 目标prefix + 完整源key
+                    // 所以源key = 目标key - 目标prefix
+                    if let Some(p) = &self.target.prefix {
+                        let key = match p.ends_with("/") {
+                            true => &target_key[p.len()..],
+                            false => &target_key[p.len() + 1..],
+                        };
+                        key.to_string()
+                    } else {
+                        target_key.to_string()
+                    }
                 } else {
-                    source_key.push_str(target_key);
+                    // 不保留源端prefix时，目标key = 目标prefix + (源key - 源prefix)
+                    // 所以源key = 源prefix + (目标key - 目标prefix)
+                    let source_key_without_target_prefix = if let Some(p) = &self.target.prefix {
+                        let key = match p.ends_with("/") {
+                            true => &target_key[p.len()..],
+                            false => &target_key[p.len() + 1..],
+                        };
+                        key
+                    } else {
+                        target_key
+                    };
+                    
+                    // 添加源端prefix
+                    match &self.source.prefix {
+                        Some(source_prefix) => {
+                            let mut key = source_prefix.clone();
+                            key.push_str(source_key_without_target_prefix);
+                            key
+                        }
+                        None => source_key_without_target_prefix.to_string(),
+                    }
                 };
 
                 if !source_key.is_empty() &&
@@ -637,7 +689,26 @@ impl TransferExecutor for TransferOss2OssRecordsExecutor {
                 Some(s) => s,
                 None => "".to_string(),
             };
-            target_key.push_str(&record.key);
+            
+            // 根据preserve_prefix选项决定是否保留源端prefix
+            let source_key = if self.attributes.preserve_prefix {
+                // 保留源端prefix，直接使用完整的源key
+                record.key.clone()
+            } else {
+                // 不保留源端prefix，需要去掉源端prefix部分
+                match &self.source.prefix {
+                    Some(source_prefix) => {
+                        if record.key.starts_with(source_prefix) {
+                            record.key[source_prefix.len()..].to_string()
+                        } else {
+                            record.key.clone()
+                        }
+                    }
+                    None => record.key.clone(),
+                }
+            };
+            
+            target_key.push_str(&source_key);
 
             self.offset_map.insert(
                 offset_key.clone(),

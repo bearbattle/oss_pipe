@@ -67,6 +67,7 @@ attributes:
     filter_type: Greater
     timestamp: 1745753687
   objects_list_files_max_line: 1000000
+  preserve_prefix: true
 ```
 
 
@@ -419,6 +420,15 @@ attributes:
        <td>attributes:<br>
         &nbsp;&nbsp;&nbsp;&nbsp;increment_mode: scan</td>
 	</tr>    
+<tr>
+\t   <td>attributes.preserve_prefix</td>
+\t   <td>bool</td>
+       <td>否</td>
+       <td>任务属性，是否在目标端保留源端的prefix，默认为true。当设置为true时，目标对象的key为目标prefix + 完整源key；当设置为false时，目标对象的key为目标prefix + (源key - 源prefix)</td>
+       <td>attributes:<br>
+            preserve_prefix: true</td>
+\t</tr>
+       
 </table>
 
 ### compare yaml
@@ -823,5 +833,14 @@ attributes:
        <td>attributes:<br>
         &nbsp;&nbsp;&nbsp;&nbsp;objects_list_file_max_line: 100000</td>
 	</tr>
+       
+<tr>
+\t   <td>attributes.preserve_prefix</td>
+\t   <td>bool</td>
+       <td>否</td>
+       <td>任务属性，是否在目标端保留源端的prefix，默认为true。当设置为true时，目标对象的key为目标prefix + 完整源key；当设置为false时，目标对象的key为目标prefix + (源key - 源prefix)</td>
+       <td>attributes:<br>
+            preserve_prefix: true</td>
+\t</tr>
        
 </table>
