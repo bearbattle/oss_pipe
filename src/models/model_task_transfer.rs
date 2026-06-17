@@ -150,6 +150,9 @@ pub struct TransferTaskAttributes {
     /// 增量模式：scan 或 notify，文件系统支持notify模式，源端为对象存在只支持 scan 模式，当文件系统为共享存储，例如 nfs时使用 scan模式
     #[serde(default = "TaskDefaultParameters::increment_mode_default")]
     pub increment_mode: IncrementMode,
+    /// 是否在目标端保留源端的prefix
+    #[serde(default = "TaskDefaultParameters::preserve_prefix_default")]
+    pub preserve_prefix: bool,
 }
 
 impl Default for TransferTaskAttributes {
@@ -175,6 +178,7 @@ impl Default for TransferTaskAttributes {
             ),
             objects_list_files: TaskDefaultParameters::objects_list_files_default(),
             increment_mode: TaskDefaultParameters::increment_mode_default(),
+            preserve_prefix: TaskDefaultParameters::preserve_prefix_default(),
         }
     }
 }

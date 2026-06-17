@@ -253,6 +253,8 @@ task_desc:
     access_key_id: access_key_id
     # 对象存储 secret_access
     secret_access_key: secret_access_key
+    # （当前只适用于阿里云）如果 OSS 提供了 Session Token 或者 STS Token 等字段，请填入本字段
+    session_token: session_token
     # 对象存储endpoint，请参考供应商相关文档
     endpoint: http://s3.cn-north-1.jdcloud-oss.com
     # 对象存储区域，请参考供应商相关文档
@@ -310,6 +312,8 @@ task_desc:
     access_key_id: access_key_id
     # 对象存储 secret_access
     secret_access_key: secret_access_key
+    # （当前只适用于阿里云）如果 OSS 提供了 Session Token 或者 STS Token 等字段，请填入本字段
+    session_token: session_token
     # 对象存储endpoint，请参考供应商相关文档
     endpoint: http://oss-cn-beijing.aliyuncs.com
     # 对象存储区域，请参考供应商相关文档    
@@ -326,6 +330,8 @@ task_desc:
     access_key_id: access_key_id
     # 对象存储 secret_access
     secret_access_key: secret_access_key
+    # （当前只适用于阿里云）如果 OSS 提供了 Session Token 或者 STS Token 等字段，请填入本字段
+    session_token: session_token
     # 对象存储endpoint，请参考供应商相关文档
     endpoint: http://s3.cn-north-1.jdcloud-oss.com
     # 对象存储区域，请参考供应商相关文档
@@ -384,6 +390,8 @@ task_desc:
     access_key_id: access_key_id
     # 对象存储 secret_access
     secret_access_key: secret_access_key
+    # （当前只适用于阿里云）如果 OSS 提供了 Session Token 或者 STS Token 等字段，请填入本字段
+    session_token: session_token
     # 对象存储endpoint，请参考供应商相关文档
     endpoint: http://s3.cn-north-1.jdcloud-oss.com
     # 对象存储区域，请参考供应商相关文档
@@ -480,6 +488,8 @@ task_desc:
     access_key_id: access_key_id
     # 对象存储 secret_access
     secret_access_key: secret_access_key
+    # （当前只适用于阿里云）如果 OSS 提供了 Session Token 或者 STS Token 等字段，请填入本字段
+    session_token: session_token
     # 对象存储endpoint，请参考供应商相关文档
     endpoint: http://s3.cn-north-1.jdcloud-oss.com
     # 对象存储区域，请参考供应商相关文档  
@@ -516,6 +526,8 @@ task_desc:
     access_key_id: access_key_id
     # 对象存储 secret_access
     secret_access_key: secret_access_key
+    # （当前只适用于阿里云）如果 OSS 提供了 Session Token 或者 STS Token 等字段，请填入本字段
+    session_token: session_token
     # 对象存储endpoint，请参考供应商相关文档
     endpoint: http://oss-cn-beijing.aliyuncs.com
     # 对象存储区域，请参考供应商相关文档 
@@ -532,6 +544,8 @@ task_desc:
     access_key_id: access_key_id
     # 对象存储 secret_access
     secret_access_key: secret_access_key
+    # （当前只适用于阿里云）如果 OSS 提供了 Session Token 或者 STS Token 等字段，请填入本字段
+    session_token: session_token
     # 对象存储endpoint，请参考供应商相关文档
     endpoint: http://s3.cn-north-1.jdcloud-oss.com
     # 对象存储区域，请参考供应商相关文档 

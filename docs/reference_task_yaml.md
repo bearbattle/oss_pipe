@@ -21,6 +21,8 @@ task_desc:
     access_key_id: access_key_id
     # 对象存储 secret_access
     secret_access_key: secret_access_key
+    # （当前只适用于阿里云）如果 OSS 提供了 Session Token 或者 STS Token 等字段，请填入本字段
+    session_token: session_token
     # 对象存储endpoint，请参考供应商相关文档
     endpoint: http://s3.cn-north-1.jdcloud-oss.com
     # 对象存储区域，请参考供应商相关文档
@@ -58,6 +60,8 @@ task_desc:
     # 存量模式完成后进入增量模式
     continuous: false
     transfer_type: Stock
+    # 是否保留源 Bucket 的 prefix，默认值为 true
+    preserve_prefix: true
     # 通过最后跟新时间过滤文件
     last_modify_filter:
       # 过滤方式，指定大于或小于指定时间戳，Greater、Less
@@ -86,6 +90,8 @@ task_desc:
     access_key_id: access_key_id
     # 对象存储 secret_access
     secret_access_key: secret_access_key
+    # （当前只适用于阿里云）如果 OSS 提供了 Session Token 或者 STS Token 等字段，请填入本字段
+    session_token: session_token
     # 对象存储endpoint，请参考供应商相关文档
     endpoint: http://s3.cn-north-1.jdcloud-oss.com
     # 对象存储区域，请参考供应商相关文档
@@ -102,6 +108,8 @@ task_desc:
     access_key_id: access_key_id
     # 对象存储 secret_access
     secret_access_key: secret_access_key
+    # （当前只适用于阿里云）如果 OSS 提供了 Session Token 或者 STS Token 等字段，请填入本字段
+    session_token: session_token
     # 对象存储endpoint，请参考供应商相关文档
     endpoint: http://s3.cn-north-1.jdcloud-oss.com
     # 对象存储区域，请参考供应商相关文档

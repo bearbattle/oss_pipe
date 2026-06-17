@@ -62,6 +62,8 @@ pub struct OSSDescription {
     pub prefix: Option<String>,
     #[serde(default = "OSSDescription::s3requeststyle")]
     pub request_style: S3RequestStyle,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub session_token: Option<String>,
 }
 
 impl Default for OSSDescription {
@@ -75,6 +77,7 @@ impl Default for OSSDescription {
             bucket: "bucket_name".to_string(),
             prefix: Some("test/samples/".to_string()),
             request_style: S3RequestStyle::default(),
+            session_token: None,
         }
     }
 }
