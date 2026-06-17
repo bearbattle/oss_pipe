@@ -7,8 +7,10 @@ use async_trait::async_trait;
 use aws_sdk_s3::primitives::ByteStream;
 use aws_sdk_s3::Client;
 use bytes::Bytes;
-use std::fs::OpenOptions;
-use std::io::{LineWriter, Write};
+use tokio::fs::OpenOptions;
+use futures::io::{LineWriter};
+use futures::AsyncWriteExt as _;
+use tokio_util::compat::TokioAsyncWriteCompatExt as _;
 use std::path::Path;
 
 pub struct OssAliClient {
@@ -97,13 +99,15 @@ impl OSSActions for OssAliClient {
         let path = std::path::Path::new(store_path);
 
         if let Some(p) = path.parent() {
-            std::fs::create_dir_all(p)?;
+            tokio::fs::create_dir_all(p).await?;
         };
         let file_ref = OpenOptions::new()
             .create(true)
             .write(true)
             .append(true)
-            .open(file_path.clone())?;
+            .open(file_path.clone())
+            .await?
+            .compat_write();
         let mut file = LineWriter::new(file_ref);
         for o in r.contents() {
             if let Some(s) = o.key() {
@@ -111,7 +115,7 @@ impl OSSActions for OssAliClient {
                 let _ = file.write_all("\n".as_bytes());
             }
         }
-        file.flush()?;
+        file.flush().await?;
 
         return match r.next_continuation_token() {
             Some(str) => Ok(Some(str.to_string())),
@@ -143,14 +147,16 @@ impl OSSActions for OssAliClient {
             .create(true)
             .write(true)
             .append(true)
-            .open(file_path.clone())?;
+            .open(file_path.clone())
+            .await?
+            .compat_write();
         let mut file = LineWriter::new(file_ref);
         if let Some(objects) = resp.object_list {
             for item in objects.iter() {
                 let _ = file.write_all(item.as_bytes());
                 let _ = file.write_all("\n".as_bytes());
             }
-            file.flush()?;
+            file.flush().await?;
         }
 
         while !token.is_none() {
@@ -162,7 +168,7 @@ impl OSSActions for OssAliClient {
                     let _ = file.write_all(item.as_bytes());
                     let _ = file.write_all("\n".as_bytes());
                 }
-                file.flush()?;
+                file.flush().await?;
             }
             token = resp.next_token;
         }
@@ -194,16 +200,18 @@ impl OSSActions for OssAliClient {
         let path = std::path::Path::new(store_path);
 
         if let Some(p) = path.parent() {
-            std::fs::create_dir_all(p)?;
+            tokio::fs::create_dir_all(p).await?;
         };
 
         let mut file = OpenOptions::new()
             .write(true)
             .truncate(true)
             .create(true)
-            .open(store_path)?;
+            .open(store_path)
+            .await?
+            .compat_write();
         let _ = file.write(&*bytes);
-        file.flush()?;
+        file.flush().await?;
         Ok(())
     }
 
@@ -220,8 +228,7 @@ impl OSSActions for OssAliClient {
                 .bucket(bucket.clone())
                 .key(&key)
                 .send()
-                .await
-                .unwrap();
+                .await?;
 
             let data = resp.body.collect().await?;
             let bytes = data.into_bytes();
@@ -233,16 +240,18 @@ impl OSSActions for OssAliClient {
             let path = std::path::Path::new(store_path);
 
             if let Some(p) = path.parent() {
-                std::fs::create_dir_all(p)?;
+                tokio::fs::create_dir_all(p).await?;
             };
 
             let mut file = OpenOptions::new()
                 .write(true)
                 .truncate(true)
                 .create(true)
-                .open(store_path)?;
+                .open(store_path)
+                .await?
+                .compat_write();
             let _ = file.write(&*bytes);
-            file.flush()?;
+            file.flush().await?;
         }
         Ok(())
     }

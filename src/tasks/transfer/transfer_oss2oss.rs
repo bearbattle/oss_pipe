@@ -583,11 +583,7 @@ impl TransferOss2Oss {
                     // 保留源端prefix时，目标key = 目标prefix + 完整源key
                     // 所以源key = 目标key - 目标prefix
                     if let Some(p) = &self.target.prefix {
-                        let key = match p.ends_with("/") {
-                            true => &target_key[p.len()..],
-                            false => &target_key[p.len() + 1..],
-                        };
-                        key.to_string()
+                        strip_prefix_with_separator(p, target_key).to_string()
                     } else {
                         target_key.to_string()
                     }
@@ -595,11 +591,7 @@ impl TransferOss2Oss {
                     // 不保留源端prefix时，目标key = 目标prefix + (源key - 源prefix)
                     // 所以源key = 源prefix + (目标key - 目标prefix)
                     let source_key_without_target_prefix = if let Some(p) = &self.target.prefix {
-                        let key = match p.ends_with("/") {
-                            true => &target_key[p.len()..],
-                            false => &target_key[p.len() + 1..],
-                        };
-                        key
+                        strip_prefix_with_separator(p, target_key)
                     } else {
                         target_key
                     };
@@ -887,20 +879,11 @@ impl TransferOss2OssRecordsExecutor {
         };
         let content_len_usize: usize = content_len.try_into()?;
 
-        let expr = match s_obj_output.expires_string {
-            Some(str) => {
-                let formats = [
-                    Format::DateTime,
-                    Format::DateTimeWithOffset,
-                    Format::HttpDate,
-                    Format::EpochSeconds,
-                ];
-                formats.iter().find_map(|&format| 
-                    DateTime::from_str(&str, format).ok()
-                )
-            }
-            None => None,
-        };
+        let expr = s_obj_output.expires_string.and_then(|expires_str| {
+            [Format::DateTime, Format::DateTimeWithOffset, Format::HttpDate, Format::EpochSeconds]
+                .iter()
+                .find_map(|&format| DateTime::from_str(&expires_str, format).ok())
+        });
 
         return match content_len_usize.le(&self.attributes.large_file_size) {
             true => {
@@ -1034,4 +1017,11 @@ impl TransferOss2OssRecordsExecutor {
         }
         Ok(())
     }
+}
+
+/// 从 key 中去除 prefix，如果 prefix 不以 '/' 结尾，还会额外去除 prefix 之后的 '/' 分隔符。
+fn strip_prefix_with_separator<'a>(prefix: &str, key: &'a str) -> &'a str {
+    key.strip_prefix(prefix)
+        .map(|rest| rest.strip_prefix('/').unwrap_or(rest))
+        .unwrap_or(key)
 }

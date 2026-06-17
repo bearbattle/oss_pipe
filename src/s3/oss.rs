@@ -102,7 +102,7 @@ impl OSSDescription {
                     .credentials_provider(SharedCredentialsProvider::new(Credentials::new(
                         self.access_key_id.clone(),
                         self.secret_access_key.clone(),
-                        None,
+                        self.session_token.clone(),
                         None,
                         "Static",
                     )))
@@ -124,7 +124,7 @@ impl OSSDescription {
                     .credentials_provider(SharedCredentialsProvider::new(Credentials::new(
                         self.access_key_id.clone(),
                         self.secret_access_key.clone(),
-                        None,
+                        self.session_token.clone(),
                         None,
                         "Static",
                     )))
