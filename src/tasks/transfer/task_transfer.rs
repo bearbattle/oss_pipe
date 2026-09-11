@@ -115,11 +115,11 @@ impl TransferTask {
         // assistant.check_point_path = checkpoint_file.clone();
         // let increment_assistant = Arc::new(Mutex::new(assistant));
 
-        // 任务启动前清理未执行完成的target 端 multi part
-        self.target.oss_clean_multi_parts().await?;
 
         // 判断是否执行任务初始化
         if !self.attributes.start_from_checkpoint {
+            // 任务启动前清理未执行完成的target 端 multi part
+            self.target.oss_clean_multi_parts().await?;
             self.init_task().await?;
         }
 

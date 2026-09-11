@@ -421,13 +421,13 @@ attributes:
         &nbsp;&nbsp;&nbsp;&nbsp;increment_mode: scan</td>
 	</tr>    
 <tr>
-\t   <td>attributes.preserve_prefix</td>
-\t   <td>bool</td>
-       <td>否</td>
-       <td>任务属性，是否在目标端保留源端的prefix，默认为true。当设置为true时，目标对象的key为目标prefix + 完整源key；当设置为false时，目标对象的key为目标prefix + (源key - 源prefix)</td>
-       <td>attributes:<br>
-            preserve_prefix: true</td>
-\t</tr>
+   <td>attributes.preserve_prefix</td>
+   <td>bool</td>
+     <td>否</td>
+     <td>任务属性，是否在目标端保留源端的prefix，默认为true。当设置为true时，目标对象的key为目标prefix + 完整源key；当设置为false时，目标对象的key为目标prefix + (源key - 源prefix)</td>
+     <td>attributes:<br>
+          preserve_prefix: true</td>
+</tr>
        
 </table>
 
